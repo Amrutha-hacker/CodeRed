@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Lab Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Medical Lab Simulator</h1>
+    <form id="symptom-form">
+        <label for="symptom">Do you have a fever? (yes/no)</label>
+        <input type="text" id="symptom" name="symptom" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    // Add JavaScript for the symptoms input and prediction flow
+    const symptoms = {
+        "fever": false,
+        "headache": false,
+        "cough": false,
+        "fatigue": false,
+        "nausea": false,
+        "chest pain": false,
+        "dizziness": false,
+        "abdominal pain": false,
+        "rash": false,
+        "shortness of breath": false,
+        "joint pain": false,
+        "sore throat": false,
+        "runny nose": false,
+        "sweating": false
+    };
+
+    let currentSymptomIndex = 0;
+    const symptomKeys = Object.keys(symptoms);
+
+    function askQuestion() {
+        if (currentSymptomIndex < symptomKeys.length) {
+            document.querySelector("label").textContent = `Do you have ${symptomKeys[currentSymptomIndex]}? (yes/no)`;
+        } else {
+            predictDisease();
+        }
+    }
+
+    function predictDisease() {
+        let resultText = "Possible Diagnoses:\n";
+        const diagnoses = {
+            "fever": ["flu", "common cold", "covid-19", "malaria", "typhoid", "dengue", "meningitis", "sepsis"],
+            "headache": ["migraine", "tension headache", "flu", "sinusitis", "cluster headache", "brain tumor", "meningitis"],
+            "cough": ["common cold", "flu", "covid-19", "bronchitis", "asthma", "pneumonia", "tuberculosis", "whooping cough"],
+            "fatigue": ["anemia", "depression", "flu", "chronic fatigue syndrome", "sleep apnea", "hypothyroidism", "diabetes", "heart failure"],
+            "nausea": ["gastritis", "food poisoning", "pregnancy", "gastroenteritis", "motion sickness", "pancreatitis", "hepatitis"],
+            "chest pain": ["heart attack", "angina", "pneumonia", "pulmonary embolism", "gastritis", "esophageal reflux", "pericarditis"],
+            "dizziness": ["vertigo", "anemia", "dehydration", "low blood pressure", "ear infection", "stroke", "depression"],
+            "abdominal pain": ["appendicitis", "gastritis", "ulcer", "gallstones", "irritable bowel syndrome", "diverticulitis", "pancreatitis"],
+            "rash": ["allergic reaction", "measles", "chickenpox", "eczema", "psoriasis", "hives", "lupus", "dermatitis", "impetigo"],
+            "shortness of breath": ["asthma", "chronic obstructive pulmonary disease (COPD)", "pneumonia", "pulmonary embolism", "heart failure", "anxiety", "allergy"],
+            "joint pain": ["arthritis", "gout", "lupus", "rheumatoid arthritis", "bursitis", "fibromyalgia", "osteoarthritis", "Lyme disease"],
+            "sore throat": ["strep throat", "common cold", "flu", "tonsillitis", "mononucleosis", "laryngitis", "croup"],
+            "runny nose": ["common cold", "allergy", "sinusitis", "flu", "covid-19", "rhinitis", "hay fever"],
+            "sweating": [ "menopause", "fever", "hyperthyroidism", "anxiety", "infection", "drug withdrawal", "night sweats"]
+        };
+
+        let matchedDiagnoses = [];
+
+        // Check for possible diagnoses based on the selected symptoms
+        for (const symptom in symptoms) {
+            if (symptoms[symptom]) {
+                matchedDiagnoses = matchedDiagnoses.concat(diagnoses[symptom]);
+            }
+        }
+
+        if (matchedDiagnoses.length > 0) {
+            resultText += matchedDiagnoses.join(", ");
+        } else {
+            resultText = "No possible diagnoses found based on your responses.";
+        }
+
+        document.getElementById("result").textContent = resultText;
+    }
+
+    document.querySelector("#symptom-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const userInput = document.getElementById("symptom").value.toLowerCase().trim();
+
+        if (userInput === "yes") {
+            symptoms[symptomKeys[currentSymptomIndex]] = true;
+        }
+
+        currentSymptomIndex++;
+        askQuestion();
+    });
+
+    // Initialize the first question
+    askQuestion();
+</script>
+
+</body>
+</html>
